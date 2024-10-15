@@ -15,7 +15,7 @@ int incrementarePrinValoare(int x) {
 
 // Transmiterea prin adresa a unei variabile duce la modificarea valorii ei si in afara functiei 
 // => returnarea valorii este optionala => putem avea o functie void
-void incrementarePrinAdresa(int* x) { 
+void incrementarePrinAdresa(int* x) {
     *x = *x + 1;
 }
 
@@ -40,7 +40,7 @@ int main()
     x = incrementarePrinValoare(x); // pentru a schimba valoarea suntem nevoiti sa asignam valoarea returnata de functie
     cout << "Valoarea lui x dupa asignarea valorii returnate de incrementare prin valoare este: " << x << endl; // x devine 2
 
-    incrementarePrinAdresa(&x); 
+    incrementarePrinAdresa(&x);
     cout << "Valoarea lui x dupa incrementare prin adresa este: " << x << endl; // x devine 3
 
 
