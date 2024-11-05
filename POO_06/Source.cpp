@@ -15,7 +15,7 @@ public:
 	int noProduse = 0;
 
 	Magazin() :idMagazin(0) {
-
+		this->procentTVA = 0;
 	}
 
 	Magazin(int _idMagazin) :idMagazin(_idMagazin) { // initializarea unui atribut constant se face doar cu initializator
