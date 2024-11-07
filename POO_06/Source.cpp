@@ -9,7 +9,7 @@ class Magazin {
 
 public:
 
-	static float procentTVA;
+	static float procentTVA; // membrul a fost "descris", insa nu are memorie alocata momentan, el trebuie declarat in afara clasei pentru a exista
 	string numeMagazin = "";
 	int* inventar = NULL;
 	int noProduse = 0;
@@ -97,7 +97,7 @@ class Mall {
 
 };
 
-float Magazin::procentTVA = 0;
+float Magazin::procentTVA = 0; // necesar pentru ca procentTVA sa existe (trebuie declarat in afara clasei)
 
 // functie dummy folosita pentru demonstrarea apelurilor implicite ale Copy Constructorului
 Magazin test(Magazin m) { // apel 1 copy constructor - transmitere prin valoare a lui m
