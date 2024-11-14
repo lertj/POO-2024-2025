@@ -49,6 +49,50 @@ public:
         }
     }
 
+    Business(const Business& b) : denumire(b.denumire) {
+        /*this->denumire = _denumire;*/
+        if (b.salarii != nullptr || b.nrAngajati > 0) {
+            this->salarii = new int[b.nrAngajati];
+            for (int i = 0; i < b.nrAngajati; i++) {
+                if (b.salarii[i] >= SALARIU_MINIM) {
+                    this->salarii[i] = b.salarii[i];
+                }
+                else {
+                    cout << "Salariul de " << b.salarii[i] << " lei este prea mic. Acesta va fi modificat la suma minima.\n";
+                    this->salarii[i] = SALARIU_MINIM;
+                }
+            }
+            this->nrAngajati = b.nrAngajati;
+        }
+        // neelegant (validare dupa atribuire)
+        //if (this->denumire.size() < 3) { 
+        //    this->denumire = "invalid"; 
+        //}
+
+        if (b.departament != nullptr || strlen(b.departament) > 3) {
+            this->departament = new char[strlen(b.departament) + 1];
+            strcpy_s(this->departament, strlen(b.departament) + 1, b.departament);
+        }
+
+        if (b.numeAngajati != nullptr) {
+            this->numeAngajati = new char* [b.nrAngajati];
+            for (int i = 0; i < b.nrAngajati; i++) {
+                this->numeAngajati[i] = new char[strlen(b.numeAngajati[i]) + 1];
+                strcpy_s(this->numeAngajati[i], strlen(b.numeAngajati[i]) + 1, b.numeAngajati[i]);
+            }
+        }
+    }
+
+    ~Business() {
+        cout << "\nApelare destructor\n";
+        delete[] this->departament;
+        delete[] this->salarii;
+        for (int i = 0; i < this->nrAngajati; i++) {
+            delete[] this->numeAngajati[i];
+        }
+        delete[] this->numeAngajati;
+    }
+
     void afisare() {
         cout << "Denumire: " << this->denumire << "\n";
         cout << "Nr angajati: " << this->nrAngajati << endl;
@@ -58,6 +102,8 @@ public:
             cout << "Nume: " << this->numeAngajati[i] << " Salariu: " << this->salarii[i] << endl;
         }
     }
+
+    //static void afiseazaSalariulSiNume(const Business& b, int idAngajat); //este posibil
 
     static void afiseazaSalariulSiNume(const Business& b, int idAngajat) {
         // this nu exista in contextul unei metode statice
@@ -81,7 +127,7 @@ public:
     }
 
     Business& operator++(int) { // post++ // Business* this;
-        Business copie = Business(*this); // creezi copie
+        Business copie = Business(*this); // creezi copie // copy constructor
         for (int i = 0; i < this->nrAngajati; i++) {
             this->salarii[i] += 500;
         }
@@ -98,7 +144,47 @@ public:
         return suma > buget;
     }
 
+    friend ostream& operator<<(ostream& out, const Business& b);
+    friend istream& operator>>(istream& in, Business& b);
 };
+
+ostream& operator<<(ostream& out, const Business& b) { // cu inlantuire de operatori istream& // fara inalantuire void
+    out << "Denumire: " << b.denumire << "\n";
+    out << "Nr angajati: " << b.nrAngajati << endl;
+    out << "Departament: " << b.departament << endl;
+
+    for (int i = 0; i < b.nrAngajati; i++) {
+        out << "Nume: " << b.numeAngajati[i] << " Salariu: " << b.salarii[i] << endl;
+    }
+
+    return out;
+}
+
+istream& operator>>(istream& in, Business& b) { // cu inlantuire de operatori istream& // fara inalantuire void
+    char buffer[100];
+    in >> buffer;
+
+    if (b.departament != nullptr) {
+        delete[] b.departament;
+    }
+
+    b.departament = new char[strlen(buffer) + 1];
+    strcpy_s(b.departament, strlen(buffer) + 1, buffer);
+
+    // + alte variabile
+
+    return in;
+}
+
+//void Business::afiseazaSalariulSiNume(const Business& b, int idAngajat) { // este posibil
+//    // this nu exista in contextul unei metode statice
+//    // this->salarii[idAngajat]; // EROARE DE COMPILARE
+//    if (idAngajat >= 0 && idAngajat < b.nrAngajati) {
+//        cout << "Nume: " << b.numeAngajati[idAngajat] << endl;
+//        cout << "Salariu: " << b.salarii[idAngajat] << endl;
+//    }
+//}
+
 
 int Business::LUNGIME_NUME_MAX = 30;
 int Business::SALARIU_MINIM = 1000;
@@ -121,6 +207,9 @@ int main()
     strcpy_s(numeAngajati[2], strlen("Andrei3") + 1, "Andrei3");
 
     Business b1(denumire, salarii, nrAngajati, departament, numeAngajati);
+    //Business x = b1; // Copy Constructor
+    //Business y;
+    //y = b1; // operator =
     b1.afisare();
     numeAngajati[0][0] = 'C'; // din primul sir de caractere schimbam primul caracter
     cout << "\n\n";
@@ -145,4 +234,15 @@ int main()
 
     Business::afiseazaSalariulSiNume(b1,0); // varianta corecta si recomandata
     b1.afiseazaSalariulSiNume(b1,0); // varianta permisa, dar nerecomandata
+
+    cout << "\nOperatori:\n" << endl;
+
+    cout << b1 << b1;
+
+    cout << "\n\nCitire:\n";
+
+    cin >> b1;
+
+    cout << b1;
+    return 0;
 }
