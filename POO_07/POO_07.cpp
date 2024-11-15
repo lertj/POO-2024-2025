@@ -85,12 +85,20 @@ public:
 
     ~Business() {
         cout << "\nApelare destructor\n";
-        delete[] this->departament;
-        delete[] this->salarii;
-        for (int i = 0; i < this->nrAngajati; i++) {
-            delete[] this->numeAngajati[i];
+        if(this->departament != nullptr)
+            delete[] this->departament;
+
+        if (this->departament != nullptr)
+            delete[] this->salarii;
+
+        if (this->numeAngajati != nullptr){
+
+            for (int i = 0; i < this->nrAngajati; i++) {
+                delete[] this->numeAngajati[i];
+            }
+            
+            delete[] this->numeAngajati;
         }
-        delete[] this->numeAngajati;
     }
 
     void afisare() {
