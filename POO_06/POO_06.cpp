@@ -95,9 +95,10 @@ public:
 		cout << endl << "***** Apel Operator= *****" << endl;
 		if (this != &m2) {
 
-			if (m2.inventar != NULL || m2.noProduse != 0) {
+			if (m2.inventar != NULL) { // sau if(m2.inventar != nullptr && m2.noProduse != 0)
 				if (this->inventar != NULL) {
 					delete[] this->inventar;
+					this->inventar = nullptr;
 				}
 
 				this->inventar = new int[m2.noProduse];
@@ -116,7 +117,11 @@ public:
 
 	~Magazin() {
 		cout << "\nApelare Destructor\n";
-		delete[] this->tara;
+		if (this->tara != nullptr) {
+			delete[] this->tara;
+			this->tara = nullptr;
+		}
+		
 	}
 
 	friend Magazin test(Magazin m);
