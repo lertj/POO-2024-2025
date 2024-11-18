@@ -85,19 +85,25 @@ public:
 
     ~Business() {
         cout << "\nApelare destructor\n";
-        if(this->departament != nullptr)
+        if (this->departament != nullptr) {
             delete[] this->departament;
+            this->departament = nullptr;
+        }
 
-        if (this->departament != nullptr)
+        if (this->departament != nullptr) {
             delete[] this->salarii;
+            this->salarii = nullptr;
+        }
 
         if (this->numeAngajati != nullptr){
 
             for (int i = 0; i < this->nrAngajati; i++) {
                 delete[] this->numeAngajati[i];
+                this->numeAngajati[i] = nullptr;
             }
             
             delete[] this->numeAngajati;
+            this->numeAngajati = nullptr;
         }
     }
 
