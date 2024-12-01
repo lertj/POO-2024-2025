@@ -61,6 +61,23 @@ public:
         }
     }
 
+    void operator()() {
+        cout << "empty operator()\n";
+    }
+
+    void operator()(int x) {
+        cout << "operator(int) cu x=" << x <<"\n";
+    }
+
+    explicit operator float() { // permitem DOAR cast-uri explicite
+        cout << "Cast to float explicit\n";
+        return this->pretBaza;
+    }
+
+    //operator float() { // permitem cast-uri implicite si explicite
+    //    return this->pretBaza;
+    //}
+
     Sejur(const Sejur& sej): id(sej.id) {// Prin returnarea unei referinte (Sejur&) evitam (auto)apelarea copy constructorului
 
         this->destinatie = sej.destinatie;
@@ -102,9 +119,6 @@ public:
     string getDestinatie() {
         return this->destinatie;
     }
-
-    
-
 
     friend ostream& operator<<(ostream& out, const Sejur& s);
 };
@@ -158,6 +172,10 @@ int main()
 
     s1 = s1 + 110.5f;
     cout << "s1 modificat : " << s1 << endl;
+
+    s1();
+    s1(30);
+    cout << (float)s1;
 
     return 0;
 }
