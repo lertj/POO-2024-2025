@@ -29,10 +29,11 @@ public:
         cout << "\n";
     }
 
-    Sejur& operator+(float x) { // Prin returnarea unei referinte (Sejur&) evitam apelarea copy constructorului
-        this->pretBaza += x;
+    Sejur operator+(float x) const { //returnam o COPIE // thhis ramane NEMODIFICAT
+        Sejur copie = *this;
+        copie.pretBaza += x;
 
-        return *this;
+        return copie;
     }
 
     Sejur& operator--(int) { // post-decrementare
@@ -60,6 +61,37 @@ public:
         }
     }
 
+    Sejur(const Sejur& sej): id(sej.id) {// Prin returnarea unei referinte (Sejur&) evitam (auto)apelarea copy constructorului
+
+        this->destinatie = sej.destinatie;
+        this->nrExcursii = sej.nrExcursii;
+        this->pretBaza = sej.pretBaza;
+        this->esteValabila = sej.esteValabila;
+
+
+        this->preturiExcursii = new float[sej.nrExcursii];
+        for (int i = 0; i < sej.nrExcursii; i++) {
+            this->preturiExcursii[i] = sej.preturiExcursii[i];
+        }
+
+    }
+
+    Sejur& operator=(const Sejur& sej) {
+
+        this->destinatie = sej.destinatie;
+        this->nrExcursii = sej.nrExcursii;
+        this->pretBaza = sej.pretBaza;
+        this->esteValabila = sej.esteValabila;
+
+
+        this->preturiExcursii = new float[sej.nrExcursii];
+        for (int i = 0; i < sej.nrExcursii; i++) {
+            this->preturiExcursii[i] = sej.preturiExcursii[i];
+        }
+
+        return *this;
+    }
+
     ~Sejur() {
         if (preturiExcursii != nullptr) {
             delete[] preturiExcursii;
@@ -70,6 +102,10 @@ public:
     string getDestinatie() {
         return this->destinatie;
     }
+
+    
+
+
     friend ostream& operator<<(ostream& out, const Sejur& s);
 };
 ostream& operator<<(ostream& out, const Sejur& s)
@@ -86,6 +122,7 @@ ostream& operator<<(ostream& out, const Sejur& s)
 Sejur& operator+(float x, Sejur& s) {
     return s + x;
 }
+
 int main()
 {
     float* excursii = new float[3];
@@ -114,4 +151,13 @@ int main()
     else {
         cout << endl << "Pentru destinatia " << s1.getDestinatie() << " bugetul NU este suficient.\n";
     }
+    
+    cout << "s1: " << s1 << endl;
+    s1 + 12.5f;
+    cout << "s1 nemodificat in continuare: " << s1 << endl;
+
+    s1 = s1 + 110.5f;
+    cout << "s1 modificat : " << s1 << endl;
+
+    return 0;
 }
