@@ -116,9 +116,6 @@ public:
 };
 
 
-
-
-
 int main()
 {
     cout << "*** Persoana p1 ***" << "\n";
