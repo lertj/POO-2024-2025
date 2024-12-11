@@ -14,8 +14,10 @@ class Character {
     char* name = nullptr;
     Server server = (Server)999;
     float gold = 0;
+    static float MAX_GOLD;
 public:
     static int noCharacters;
+    static const char forbiddenCharacters[10];
 
     Character() : id(Character::noCharacters) {
         cout << "Character - Default Constructor\n";
@@ -27,17 +29,69 @@ public:
         Character:noCharacters++;
     }
 
-    Character(char* name, Server server, float _gold) : id(Character::noCharacters) {
+    //Character(char* name, Server server, float _gold) : id(Character::noCharacters) { // var1
+    //    cout << "Character - Arguments Constructor\n";
+    //    this->name = new char[strlen(name) + 1];
+    //    strncpy(this->name, name, strlen(name) + 1);
+    //    this->server = server;
+    //    this->gold = _gold;
+    //    Character:noCharacters++;
+    //}
+
+    Character(char* name, Server server, float _gold) : id(Character::noCharacters) { // var2
         cout << "Character - Arguments Constructor\n";
         this->name = new char[strlen(name) + 1];
         strncpy(this->name, name, strlen(name) + 1);
         this->server = server;
         this->gold = _gold;
-        Character:noCharacters++;
+    Character:noCharacters++;
+    }
+
+    static bool containsForbiddenSymbols(const Character& c, const char forbiddenSymbols[]) {
+        for (int i = 0; i < strlen(forbiddenSymbols); i++) {
+            if (strchr(c.name, forbiddenSymbols[i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    char* getName() const {
+        return name;
+    }
+
+    void setName(const char* _name) {
+        if (strlen(_name) >= 3 && containsForbiddenSymbols(*this, Character::forbiddenCharacters) == false) {
+            if (this->name != nullptr) {
+                delete[] this->name;
+                this->name = nullptr;
+            }
+
+            this->name = new char[strlen(_name + 1)];
+            strcpy_s(this->name, strlen(_name + 1), _name);
+        }
+        else {
+            throw exception("The name is invalid. ( length < 3 or name contains " + string(Character::forbiddenCharacters);
+        }
     }
 
     Server getServer() const { // punem const pentru a garanta ca "this" nu va fi modificat
         return this->server;
+    }
+
+    void setServer(const Server server) {
+        this->server = server;
+    }
+
+    float getGold() const {
+        return this->gold;
+    }
+
+    void setGold(const float gold) {
+        if (gold >= 0 || gold <= Character::MAX_GOLD) {
+            this->gold = gold;
+        }
     }
 
     friend ostream& operator<<(ostream& out, const Character& c); //var 1
@@ -69,6 +123,8 @@ ostream& operator<<(ostream& out, const Character& c) { // var 1
 }
 
 int Character::noCharacters = 1;
+const char Character::forbiddenCharacters[10] = " &<>%{}/\\";
+float Character::MAX_GOLD = 999999999;
 
 int main()
 {
